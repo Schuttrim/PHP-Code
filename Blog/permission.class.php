@@ -4,7 +4,7 @@
     Stands for the given permissions to an article
     Params: 
         - User as result of database::getuser()
-        - article as result of database::getarticles()
+        - article as result of database::getarticles(){a single row} OR database::getarticlebyid($id)
         
     If only user known, you simply can just get basic right of user (suchas create new article, create new user)
     */

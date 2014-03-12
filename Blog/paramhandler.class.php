@@ -57,8 +57,8 @@
         Handles Delete Parameter
         */
         private function handledelete() {
-            if(isset($_POST['delete']) && isset($_SESSION['userid'])) {
-                $userpermission = new permission($this->db->getuser($_SESSION['userid']), null);
+            if(isset($_POST['delete']) && isset($_SESSION['userid']) && isset($_POST['id'])) {
+                $userpermission = new permission($this->db->getuser($_SESSION['userid']), $this->db->getarticlebyid($_POST['id']));
                 if($userpermission->hasdeletepermission()) {
                     $GLOBALS['flags']->delete = true;
                 }
@@ -68,8 +68,8 @@
         Handles Edit Parameter
         */
         private function handleedit() {
-            if(isset($_POST['edit']) && isset($_SESSION['userid'])) {
-                $userpermission = new permission($this->db->getuser($_SESSION['userid']), null);
+            if(isset($_POST['edit']) && isset($_SESSION['userid']) && isset($_POST['id'])) {
+                $userpermission = new permission($this->db->getuser($_SESSION['userid']), $this->db->getarticlebyid($_POST['id']));
                 if($userpermission->haseditpermission()) {
                     $GLOBALS['flags']->edit = true;
                 }
@@ -80,8 +80,8 @@
         Handles comment Parameter
         */
         private function handlecomment() {
-            if(isset($_POST['comment']) && isset($_SESSION['userid'])) {
-                $userpermission = new permission($this->db->getuser($_SESSION['userid']), null);
+            if(isset($_POST['comment']) && isset($_SESSION['userid']) && isset($_POST['id'])) {
+                $userpermission = new permission($this->db->getuser($_SESSION['userid']), $this->db->getarticlebyid($_POST['id']));
                 if($userpermission->hascommentpermission()) {
                     $GLOBALS['flags']->comment = true;
                 }

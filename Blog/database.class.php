@@ -13,7 +13,7 @@
             $this->standardschema = $standardschema;
         }
         
-        /* Lists all articles */
+        /* Returns all articles */
         public function getarticles() {
             $retval = false;
             
@@ -28,7 +28,25 @@
             }
             return $retval;
         }
-        
+		
+		/* 
+		Returns article with chosen ID
+		else false;
+		*/
+        public function getarticlebyid($id) {
+            $retval = false;
+            
+            if($db = $this->login()){
+                if($result = $this->getobjectarr($db->query("SELECT b.id id, u.id uid, u.nickname nickname, b.creationdate creationdate, b.topic topic, b.content content FROM beitrag b, users u WHERE b.user_id = u.id AND b.id = '" . $id . "';")))
+                {
+                    if(count($result) > 0) {
+                        $retval = $result[0];
+                    }
+                }
+                $this->logout($db);
+            }
+            return $retval;
+        }
         /*
         Returns user with id or false
         */
