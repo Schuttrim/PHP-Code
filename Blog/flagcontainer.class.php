@@ -1,6 +1,9 @@
 <?php
 
-
+/*
+Here we are able to save flags, which will be
+used in view
+*/
 class flagcontainer {
     public $newarticle;
     public $useradministration;
