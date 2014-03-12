@@ -10,6 +10,7 @@ class flagcontainer {
     public $delete;
     public $edit;
     public $comment;
+	public $errmsg;
     
     public function __construct() {
         $this->newarticle = false;
@@ -17,6 +18,7 @@ class flagcontainer {
         $this->delete = false;
         $this->edit = false;
         $this->comment = false;
+		$this->errmsg = false;
     }
 }
 

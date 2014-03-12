@@ -25,6 +25,7 @@
             return empty($this->user) ? false : true;
         }
         public function hasuseradminpermission() {
+			return empty($this->user) ? false : ($this->user->Berechtigung == 'admin' ? true : false);
         }
         
         public function hasdeletepermission() {

@@ -12,6 +12,34 @@
             $this->password = $password;
             $this->standardschema = $standardschema;
         }
+		
+		/*
+		Performs an update on article with $id and replaces the title and the content
+		returns true or false if failed
+		*/
+		public function editarticle($id, $title, $content) {
+			$retval = false;
+			if($db = $this->login()){
+				$db->query("UPDATE beitrag SET topic='" . $title . "', content='" . $content . "' WHERE id = " . $id . ";") ? $retval = true : $retval = false;
+				$this->logout($db);
+			}
+			
+			return $retval;
+		}
+		
+		/*
+		Inserts a new article with title, content, owner, and date (today
+		returns true or false if failed
+		*/
+		public function newinsertarticle($title, $content, $uid) {
+			$retval = false;
+			if($db = $this->login()){
+				$db->query("INSERT INTO beitrag (user_id, topic, content, creationdate) VALUES(" . $uid . ", '" . $title . "', '" . $content . "', CURDATE());") ? $retval = true : $retval = false;
+				$this->logout($db);
+			}
+			
+			return $retval;
+		}
         
         /* Returns all articles */
         public function getarticles() {
@@ -102,6 +130,7 @@
                 {
                     if($result[0]->countrows == 1) {
                         $retval = $result[0]->ID;
+						echo 'hit';
                     }
                 }
                 $this->logout($db);

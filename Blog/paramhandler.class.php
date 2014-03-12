@@ -3,8 +3,9 @@
     require_once('permission.class.php');
     require_once('flagcontainer.class.php');
     
-    // ACHTUNG noch nicht vor SQLINJECTIONS geschützt
-    // SOME ACTIONS UNHANDLED
+    // ATTENTION SQLINJECTIOINS are not disabled
+	// Special regard in functions handlenewarticlesent, -login, -newusersent, -editsent, -[every field thats going to get inserted in db]
+	// TODO: make validation class which checks for SQL and HTML injections --> securitycheck
     
     /*
     This may handle all html Parameters
@@ -27,7 +28,38 @@
             $this->handlecomment();
             $this->handlenewarticle();
             $this->handleuseradministration();
+            $this->handlenewarticlesent();
+            $this->handleeditsent();
         }
+		
+		/*
+		Handles editsent parameter
+		*/
+        private function handleeditsent() {
+			if(isset($_POST['editsent']) && isset($_SESSION['userid']) && isset($_POST['id'])){
+                $userpermission = new permission($this->db->getuser($_SESSION['userid']), $this->db->getarticlebyid($_POST['id']));
+				if($userpermission->haseditpermission()) {
+					// insert security check here
+					if(!empty($_POST['title']) && !empty($_POST['content'])) {
+						$this->db->editarticle($_POST['id'], $_POST['title'], $_POST['content']);
+					}
+				}
+			}
+		}
+		/*
+		Handles newarticlesent Parameter
+		*/
+		private function handlenewarticlesent() {
+            if(isset($_POST['newarticlesent']) && isset($_SESSION['userid'])) {
+                $userpermission = new permission($this->db->getuser($_SESSION['userid']), null);
+                if($userpermission->hasnewarticlepermission()) {
+					// insert security check here
+					if(!empty($_POST['title']) && !empty($_POST['content'])) {
+						$this->db->newinsertarticle($_POST['title'], $_POST['content'], $_SESSION['userid']);
+					}
+				}
+			}
+		}
         
         /*
         Handles newarticle Parameter
@@ -71,7 +103,7 @@
             if(isset($_POST['edit']) && isset($_SESSION['userid']) && isset($_POST['id'])) {
                 $userpermission = new permission($this->db->getuser($_SESSION['userid']), $this->db->getarticlebyid($_POST['id']));
                 if($userpermission->haseditpermission()) {
-                    $GLOBALS['flags']->edit = true;
+                    $GLOBALS['flags']->edit = $_POST['id'];
                 }
             }
         }
@@ -94,6 +126,7 @@
         */
         private function handlelogin() {
             if (isset($_POST['login'])) {
+				// insert security check here
                 if(($id = $this->db->isvalidpwuser($_POST['user'], $_POST['pw'])) == true) {
                     $_SESSION['userid'] = $id;
                 }
